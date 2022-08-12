@@ -1,7 +1,6 @@
 import SortingView from '../view/sorting-view';
 import TripPointsListView from '../view/trip-points-list-view';
 import EditFormView from '../view/edit-form-view';
-import CreatingFormView from '../view/creating-form-view';
 import TripPointView from '../view/trip-point-view';
 import { render } from '../render';
 
@@ -14,7 +13,6 @@ export default class BoardPresenter {
     render(new SortingView(), this.boardContainer);
     render(this.listComponent, this.boardContainer);
     render(new EditFormView(), this.listComponent.getElement());
-    render(new CreatingFormView(), this.listComponent.getElement());
 
     for (let i = 0; i < 3; i++) {
       render(new TripPointView(), this.listComponent.getElement());

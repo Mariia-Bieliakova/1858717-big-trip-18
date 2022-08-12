@@ -1,5 +1,5 @@
 import TripInfoView from '../view/trip-info-view';
-import { render } from '../render';
+import { render, RenderPosition } from '../render';
 
 export default class TripInfoPresenter {
   tripInfo = new TripInfoView();
@@ -7,7 +7,7 @@ export default class TripInfoPresenter {
   init = (infoContainer) => {
     this.infoContainer = infoContainer;
 
-    render(this.tripInfo, this.infoContainer, 'afterbegin');
+    render(this.tripInfo, this.infoContainer, RenderPosition.AFTERBEGIN);
   };
 
 }
