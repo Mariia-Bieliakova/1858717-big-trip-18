@@ -1,21 +1,18 @@
 import { createElement } from '../render';
-import { humanizeFullDate, isOfferChecked, findUsedOffers} from '../util';
+import { humanizeFullDate, isOfferChecked} from '../util';
 
 const createOffersTemplate = (point, offers) => {
-  let offersTemplate = '';
-  const offersByType = findUsedOffers(point, offers, true);
-  for(const offer of offersByType){
-    offersTemplate +=
-      `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isOfferChecked() ? 'checked' : ''}>
-        <label class="event__offer-label" for="event-offer-luggage-1">
-          <span class="event__offer-title">${offer.title}</span>
+  const offersByType = offers.find((offer) => point.type === offer.type);
+
+  return offersByType.offers.map((offer) =>
+    `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${isOfferChecked(offer, point) ? 'checked' : ''}>
+      <label class="event__offer-label" for="event-offer-luggage-1">
+        <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-        </label>
-      </div>`;
-  }
-  return offersTemplate;
+        <span class="event__offer-price">${offer.price}</span>
+      </label>
+    </div>`).join('');
 };
 
 const createEditFormTemplate = (point, offers) => {

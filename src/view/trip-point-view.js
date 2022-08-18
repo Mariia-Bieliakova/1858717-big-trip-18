@@ -1,20 +1,14 @@
 import { createElement } from '../render';
 import { humanizePointDate, humanizePointTime, durationInPoint} from '../util';
 
-const createOffersTemplate = (offers) => {
-  let usersOffers = '';
-
-  for (const offer of offers) {
-    usersOffers +=
+const createOffersTemplate = (offers) =>
+  offers.map((offer) =>
     `<li class="event__offer">
       <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
+        &plus;&euro;&nbsp;
       <span class="event__offer-price">${offer.price}</span>
-    </li>`;
-  }
+    </li>`).join('');
 
-  return usersOffers;
-};
 
 const createPointTemplate = (point) => {
   const {dateFrom, dateTo, basePrice, offers, type, isFavorite, destination} = point;
@@ -51,10 +45,10 @@ const createPointTemplate = (point) => {
           ${createOffersTemplate(offers)}
         </ul>
         <button class="event__favorite-btn ${favoriteClassName}" type="button">
-        <span class="visually-hidden">Add to favorite</span>
-        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-        <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-        </svg>
+          <span class="visually-hidden">Add to favorite</span>
+          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+          </svg>
         </button>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>

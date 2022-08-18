@@ -11,16 +11,18 @@ const generateDate = () => {
 export const generatePoint = () => {
   const dateFrom = generateDate();
   let dateTo = generateDate();
+
   while (dateTo <= dateFrom) {
     dateTo = generateDate();
   }
+
   return {
-    'basePrice': 222,
-    'dateFrom': dateFrom,
-    'dateTo': dateTo,
-    'destination': 1,
-    'isFavorite': Boolean(getRandomInteger(0, 1)),
-    'offers': [1,3],
-    'type': 'taxi'
+    basePrice: 222,
+    dateFrom: dateFrom,
+    dateTo: dateTo,
+    destination: 1,
+    isFavorite: Boolean(getRandomInteger(0, 1)),
+    offers: [1, 3],
+    type: 'taxi'
   };
 };

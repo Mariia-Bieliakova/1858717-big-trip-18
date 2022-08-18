@@ -39,33 +39,20 @@ const durationInPoint = (dateFrom, dateTo) => {
   return `${setNumberInFormat(differenceInMinute)}M`;
 };
 
-const isOfferChecked = () => Boolean(getRandomInteger(0, 1));
+const isOfferChecked = (offer, point) =>
+  point.offers.some((userOffer) => userOffer.id === offer.id);
 
-const findUsedOffers = (point, generatedOffers, isByType = false) => {
-  let offersByType = generatedOffers;
-  offersByType.filter((offer) => point.type === offer.type);
+const findUsedOffers = (point, generatedOffers) => {
+  const offersByType = generatedOffers
+    .find((offer) => point.type === offer.type);
 
-  if(isByType) {
-    return offersByType[0].offers;
-  }
-
-  const getOffers = (offers) => {
-    offersByType = offers.offers;
-    const userOffers = offersByType.filter((offer) => point.offers.some((offerId) => offerId === offer.id));
-    return userOffers;
-  };
-
-  const checkedOffers = getOffers(...offersByType);
-
-  return checkedOffers;
+  return offersByType.offers.filter((offer) =>
+    point.offers
+      .some((offerId) => offerId === offer.id));
 };
 
-const findDestination = (point, generatedDestinations) => {
-  const rightDestination = generatedDestinations
-    .filter((destination) => point.destination === destination.id);
-
-  return rightDestination[0];
-};
+const findDestination = (point, generatedDestinations) => generatedDestinations
+  .find((destination) => point.destination === destination.id);
 
 export {
   getRandomInteger,
