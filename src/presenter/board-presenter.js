@@ -13,9 +13,12 @@ export default class BoardPresenter {
 
   #listComponent = new TripPointsListView();
 
-  init = (boardContainer, pointsModel) => {
+  constructor (boardContainer, pointsModel) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
+  }
+
+  init = () => {
     this.#boardPoints = [...this.#pointsModel.points];
     this.#boardOffers = [...this.#pointsModel.offers];
 
