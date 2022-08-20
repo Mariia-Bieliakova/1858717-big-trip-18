@@ -1,5 +1,6 @@
 import { createElement } from '../render';
-import { humanizeFullDate, isOfferChecked} from '../util';
+import { humanizeFullDate, isOfferChecked, findDestination, createTypeListTemplate} from '../util';
+import { TYPE, DESTINATION } from '../const';
 
 const createOffersTemplate = (point, offers) => {
   const offersByType = offers.find((offer) => point.type === offer.type);
@@ -15,13 +16,15 @@ const createOffersTemplate = (point, offers) => {
     </div>`).join('');
 };
 
-const createEditFormTemplate = (point, offers) => {
-  const {type, destination, dateFrom, dateTo, basePrice} = point;
+const createEditFormTemplate = (point, offers, destinations) => {
+  const {type, dateFrom, dateTo, basePrice} = point;
 
+  const userDestination = findDestination(point, destinations);
   const dateStart = humanizeFullDate(dateFrom);
   const dateFinish = humanizeFullDate(dateTo);
 
   const typeOfPoint = type[0].toUpperCase() + type.slice(1);
+
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -35,51 +38,7 @@ const createEditFormTemplate = (point, offers) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-
-              <div class="event__type-item">
-                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-                <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-                <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-                <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-                <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-                <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-                <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-                <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-                <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-              </div>
-
-              <div class="event__type-item">
-                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-                <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-              </div>
+              ${createTypeListTemplate(TYPE)}
             </fieldset>
           </div>
         </div>
@@ -88,11 +47,9 @@ const createEditFormTemplate = (point, offers) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${typeOfPoint}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${userDestination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+            ${DESTINATION.map((item) => `<option value="${item}"></option>`).join('')}
           </datalist>
         </div>
 
@@ -129,7 +86,7 @@ const createEditFormTemplate = (point, offers) => {
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
+          <p class="event__destination-description">${userDestination.description}</p>
         </section>
       </section>
     </form>
@@ -140,14 +97,16 @@ export default class EditFormView {
   #element = null;
   #point = null;
   #offers = null;
+  #destinations = null;
 
-  constructor (point, offers) {
+  constructor (point, offers, destinations) {
     this.#point = point;
     this.#offers = offers;
+    this.#destinations = destinations;
   }
 
   get template() {
-    return createEditFormTemplate(this.#point, this.#offers);
+    return createEditFormTemplate(this.#point, this.#offers, this.#destinations);
   }
 
   get element() {

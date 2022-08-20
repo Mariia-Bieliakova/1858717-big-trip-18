@@ -17,10 +17,10 @@ export const generatePoint = () => {
   }
 
   return {
-    basePrice: 222,
+    basePrice: getRandomInteger(30, 300),
     dateFrom: dateFrom,
     dateTo: dateTo,
-    destination: 1,
+    destination: 2,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     offers: [1, 3],
     type: 'taxi'

@@ -10,6 +10,7 @@ export default class BoardPresenter {
 
   #boardPoints = [];
   #boardOffers = [];
+  #boardDestinations = [];
 
   #listComponent = new TripPointsListView();
 
@@ -21,18 +22,19 @@ export default class BoardPresenter {
   init = () => {
     this.#boardPoints = [...this.#pointsModel.points];
     this.#boardOffers = [...this.#pointsModel.offers];
+    this.#boardDestinations = [...this.#pointsModel.destinations];
 
     render(new SortingView(), this.#boardContainer);
     render(this.#listComponent, this.#boardContainer);
 
     for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i], this.#boardOffers);
+      this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestinations);
     }
   };
 
-  #renderPoint = (point, offers) => {
-    const pointComponent = new TripPointView(point);
-    const editFormComponent = new EditFormView(point, offers);
+  #renderPoint = (point, offers, destinations) => {
+    const pointComponent = new TripPointView(point, offers, destinations);
+    const editFormComponent = new EditFormView(point, offers, destinations);
 
     const replaceCardToForm = () => {
       this.#listComponent.element.replaceChild(editFormComponent.element, pointComponent.element);
