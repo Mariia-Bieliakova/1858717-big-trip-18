@@ -40,9 +40,9 @@ const durationInPoint = (dateFrom, dateTo) => {
 };
 
 const isOfferChecked = (offer, point) =>
-  point.offers.some((userOffer) => userOffer.id === offer.id);
+  point.offers.some((userOffer) => userOffer === offer.id);
 
-const findUsedOffers = (point, generatedOffers) => {
+const findSelectedOffers = (point, generatedOffers) => {
   const offersByType = generatedOffers
     .find((offer) => point.type === offer.type);
 
@@ -51,8 +51,17 @@ const findUsedOffers = (point, generatedOffers) => {
       .some((offerId) => offerId === offer.id));
 };
 
-const findDestination = (point, generatedDestinations) => generatedDestinations
+const findDestination = (point, destinations) => destinations
   .find((destination) => point.destination === destination.id);
+
+const createTypeListTemplate = (types) => types.map((type) => {
+  const typeOfPoint = type[0].toUpperCase() + type.slice(1);
+
+  return `<div class="event__type-item">
+          <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${typeOfPoint}</label>
+        </div>`;
+}).join('');
 
 export {
   getRandomInteger,
@@ -61,6 +70,7 @@ export {
   humanizeFullDate,
   durationInPoint,
   isOfferChecked,
-  findUsedOffers,
-  findDestination
+  findSelectedOffers,
+  findDestination,
+  createTypeListTemplate
 };

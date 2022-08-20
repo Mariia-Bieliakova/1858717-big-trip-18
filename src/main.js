@@ -7,10 +7,11 @@ import { render } from './render.js';
 const mainElement = document.querySelector('.trip-main');
 const tripFiltersElement = mainElement.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
-const boardPresenter = new BoardPresenter();
+
 const tripInfoPresenter = new TripInfoPresenter();
 const pointsModel = new PointsModel();
+const boardPresenter = new BoardPresenter(tripEventsElement, pointsModel);
 
 tripInfoPresenter.init(mainElement);
 render(new FiltersView(), tripFiltersElement);
-boardPresenter.init(tripEventsElement, pointsModel);
+boardPresenter.init();

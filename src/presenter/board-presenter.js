@@ -5,19 +5,69 @@ import TripPointView from '../view/trip-point-view';
 import { render } from '../render';
 
 export default class BoardPresenter {
-  listComponent = new TripPointsListView();
+  #boardContainer = null;
+  #pointsModel = null;
 
-  init = (boardContainer, pointsModel) => {
-    this.boardContainer = boardContainer;
-    this.pointsModel = pointsModel;
-    this.boardPoints = [...this.pointsModel.getPoints()];
-    this.boardOffers = [...this.pointsModel.getOffers()];
-    render(new SortingView(), this.boardContainer);
-    render(this.listComponent, this.boardContainer);
-    render(new EditFormView(this.boardPoints[0], this.boardOffers), this.listComponent.getElement());
+  #boardPoints = [];
+  #boardOffers = [];
+  #boardDestinations = [];
 
-    for (let i = 0; i < 5; i++) {
-      render(new TripPointView(this.boardPoints[i]), this.listComponent.getElement());
+  #listComponent = new TripPointsListView();
+
+  constructor (boardContainer, pointsModel) {
+    this.#boardContainer = boardContainer;
+    this.#pointsModel = pointsModel;
+  }
+
+  init = () => {
+    this.#boardPoints = [...this.#pointsModel.points];
+    this.#boardOffers = [...this.#pointsModel.offers];
+    this.#boardDestinations = [...this.#pointsModel.destinations];
+
+    render(new SortingView(), this.#boardContainer);
+    render(this.#listComponent, this.#boardContainer);
+
+    for (let i = 0; i < this.#boardPoints.length; i++) {
+      this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestinations);
     }
+  };
+
+  #renderPoint = (point, offers, destinations) => {
+    const pointComponent = new TripPointView(point, offers, destinations);
+    const editFormComponent = new EditFormView(point, offers, destinations);
+
+    const replaceCardToForm = () => {
+      this.#listComponent.element.replaceChild(editFormComponent.element, pointComponent.element);
+    };
+
+    const replaceFormToCard = () => {
+      this.#listComponent.element.replaceChild(pointComponent.element, editFormComponent.element);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToCard();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceCardToForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    editFormComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    editFormComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    render(pointComponent, this.#listComponent.element);
   };
 }

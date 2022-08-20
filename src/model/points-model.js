@@ -1,20 +1,21 @@
 import { generatePoint } from '../mock/point';
 import { generateOffers } from '../mock/offer';
 import { generateDestinations } from '../mock/destination';
-import { findUsedOffers, findDestination } from '../util';
 
 export default class PointsModel {
-  points = Array.from({length: 5}, generatePoint);
-  offers = generateOffers();
-  destination = generateDestinations();
+  #points = Array.from({length: 5}, generatePoint);
+  #offers = generateOffers();
+  #destinations = generateDestinations();
 
-  getOffers = () => this.offers;
+  get destinations () {
+    return this.#destinations;
+  }
 
-  getPoints = () => {
-    for (const point of this.points) {
-      point.offers = findUsedOffers(point, this.offers);
-      point.destination = findDestination(point, this.destination);
-    }
-    return this.points;
-  };
+  get offers () {
+    return this.#offers;
+  }
+
+  get points () {
+    return this.#points;
+  }
 }

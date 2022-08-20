@@ -5,8 +5,19 @@ export const generateDestinations = () => ([
     name: 'Chamonix',
     pictures: [
       {
-        'src': `http://picsum.photos/300/200?r=${Math.random()}`,
-        'description': 'Chamonix parliament building'
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'Chamonix parliament building'
+      }
+    ]
+  },
+  {
+    id: 2,
+    description: 'Amsterdam is the most interesting city in Netherlands.',
+    name: 'Amsterdam',
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'View of Amsterdam'
       }
     ]
   }
