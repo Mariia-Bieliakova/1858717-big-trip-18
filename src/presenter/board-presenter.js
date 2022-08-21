@@ -3,6 +3,7 @@ import TripPointsListView from '../view/trip-points-list-view';
 import EditFormView from '../view/edit-form-view';
 import TripPointView from '../view/trip-point-view';
 import NoPointView from '../view/no-points-view';
+import { NoPointMessage } from '../const';
 import { render } from '../render';
 
 export default class BoardPresenter {
@@ -27,22 +28,6 @@ export default class BoardPresenter {
     this.#boardDestinations = [...this.#pointsModel.destinations];
 
     this.#renderBoard();
-  };
-
-  #renderBoard = () => {
-    render(new SortingView(), this.#boardContainer);
-
-    this.#noPointMessage = 'Click New Event to create your first point';
-
-    if (this.#boardPoints.length === 0) {
-      render(new NoPointView(this.#noPointMessage), this.#boardContainer);
-    } else {
-      render(this.#listComponent, this.#boardContainer);
-
-      for (let i = 0; i < this.#boardPoints.length; i++) {
-        this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestinations);
-      }
-    }
   };
 
   #renderPoint = (point, offers, destinations) => {
@@ -82,5 +67,19 @@ export default class BoardPresenter {
     });
 
     render(pointComponent, this.#listComponent.element);
+  };
+
+  #renderBoard = () => {
+    render(new SortingView(), this.#boardContainer);
+
+    this.#noPointMessage = NoPointMessage.EVERYTHING;
+
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(this.#noPointMessage), this.#boardContainer);
+      return;
+    }
+    render(this.#listComponent, this.#boardContainer);
+
+    this.#boardPoints.forEach((point) => this.#renderPoint(point, this.#boardOffers, this.#boardDestinations));
   };
 }
