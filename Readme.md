@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Мария Белякова](https://up.htmlacademy.ru/ecmascript/18/user/1858717).
-* Наставник: `Алексей Хабиров`.
+* Наставник: [Алексей Хабиров](https://htmlacademy.ru/profile/alex_khab).
 
 ---
 
