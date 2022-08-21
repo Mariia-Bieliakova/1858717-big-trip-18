@@ -2,11 +2,13 @@ import SortingView from '../view/sorting-view';
 import TripPointsListView from '../view/trip-points-list-view';
 import EditFormView from '../view/edit-form-view';
 import TripPointView from '../view/trip-point-view';
+import NoPointView from '../view/no-points-view';
 import { render } from '../render';
 
 export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
+  #noPointMessage = null;
 
   #boardPoints = [];
   #boardOffers = [];
@@ -24,11 +26,22 @@ export default class BoardPresenter {
     this.#boardOffers = [...this.#pointsModel.offers];
     this.#boardDestinations = [...this.#pointsModel.destinations];
 
-    render(new SortingView(), this.#boardContainer);
-    render(this.#listComponent, this.#boardContainer);
+    this.#renderBoard();
+  };
 
-    for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestinations);
+  #renderBoard = () => {
+    render(new SortingView(), this.#boardContainer);
+
+    this.#noPointMessage = 'Click New Event to create your first point';
+
+    if (this.#boardPoints.length === 0) {
+      render(new NoPointView(this.#noPointMessage), this.#boardContainer);
+    } else {
+      render(this.#listComponent, this.#boardContainer);
+
+      for (let i = 0; i < this.#boardPoints.length; i++) {
+        this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestinations);
+      }
     }
   };
 
