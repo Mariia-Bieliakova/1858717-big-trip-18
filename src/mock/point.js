@@ -1,4 +1,4 @@
-import { getRandomInteger } from '../util';
+import { getRandomInteger } from '../utils/common';
 import dayjs from 'dayjs';
 
 const generateDate = () => {
