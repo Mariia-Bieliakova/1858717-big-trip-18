@@ -1,13 +1,16 @@
 import TripInfoView from '../view/trip-info-view';
-import { render, RenderPosition } from '../render';
+import { render, RenderPosition } from '../framework/render';
 
 export default class TripInfoPresenter {
   tripInfo = new TripInfoView();
+  #infoContainer = null;
 
-  init = (infoContainer) => {
-    this.infoContainer = infoContainer;
+  constructor (infoContainer) {
+    this.#infoContainer = infoContainer;
+  }
 
-    render(this.tripInfo, this.infoContainer, RenderPosition.AFTERBEGIN);
+  init = () => {
+    render(this.tripInfo, this.#infoContainer, RenderPosition.AFTERBEGIN);
   };
 
 }

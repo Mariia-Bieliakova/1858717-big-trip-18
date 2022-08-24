@@ -4,7 +4,8 @@ import EditFormView from '../view/edit-form-view';
 import TripPointView from '../view/trip-point-view';
 import NoPointView from '../view/no-points-view';
 import { NoPointMessage } from '../const';
-import { render } from '../render';
+import { isEscKey } from '../utils/common';
+import { render, replace } from '../framework/render';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -35,36 +36,33 @@ export default class BoardPresenter {
     const editFormComponent = new EditFormView(point, offers, destinations);
 
     const replaceCardToForm = () => {
-      this.#listComponent.element.replaceChild(editFormComponent.element, pointComponent.element);
+      replace(editFormComponent, pointComponent);
     };
 
     const replaceFormToCard = () => {
-      this.#listComponent.element.replaceChild(pointComponent.element, editFormComponent.element);
+      replace(pointComponent, editFormComponent);
     };
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
+    const closeEditForm = () => {
+      replaceFormToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    };
+
+    function onEscKeyDown (evt) {
+      if (isEscKey(evt)) {
         evt.preventDefault();
-        replaceFormToCard();
-        document.removeEventListener('keydown', onEscKeyDown);
+        closeEditForm();
       }
-    };
+    }
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setRollupClickHandler(() => {
       replaceCardToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    editFormComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
+    editFormComponent.setFormSubmitHandler(closeEditForm);
 
-    editFormComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
+    editFormComponent.setRollupClickHandler(closeEditForm);
 
     render(pointComponent, this.#listComponent.element);
   };

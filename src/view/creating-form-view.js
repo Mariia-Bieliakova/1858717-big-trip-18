@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import { createTypeListTemplate } from '../util';
 import { TYPE, DESTINATION } from '../const.js';
 
@@ -121,21 +121,8 @@ const createAddingFormTemplate = () => (`
   </li>`
 );
 
-export default class CreatingFormView {
-  #element = null;
+export default class CreatingFormView extends AbstractView{
   get template() {
     return createAddingFormTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

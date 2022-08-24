@@ -1,5 +1,5 @@
-import { createElement } from '../render';
-import { humanizePointDate, humanizePointTime, durationInPoint, findDestination, findSelectedOffers} from '../util';
+import AbstractView from '../framework/view/abstract-view';
+import { humanizePointDate, humanizePointTime, durationInPoint, findDestination, findSelectedOffers} from '../utils/point';
 
 const createOffersTemplate = (offers) =>
   offers.map((offer) =>
@@ -61,13 +61,13 @@ const createPointTemplate = (point, offers, destinations) => {
   `);
 };
 
-export default class TripPointView {
-  #element = null;
+export default class TripPointView extends AbstractView {
   #point = null;
   #offers = null;
   #destinations = null;
 
   constructor (point, offers, destinations) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
@@ -77,15 +77,13 @@ export default class TripPointView {
     return createPointTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setRollupClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #rollupClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
 }

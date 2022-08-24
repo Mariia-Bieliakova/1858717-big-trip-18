@@ -1,5 +1,5 @@
-import { createElement } from '../render';
-import { humanizeFullDate, isOfferChecked, findDestination, createTypeListTemplate} from '../util';
+import AbstractView from '../framework/view/abstract-view';
+import { humanizeFullDate, isOfferChecked, findDestination, createTypeListTemplate} from '../utils/point';
 import { TYPE, DESTINATION } from '../const';
 
 const createOffersTemplate = (point, offers) => {
@@ -93,13 +93,13 @@ const createEditFormTemplate = (point, offers, destinations) => {
   </li>`;
 };
 
-export default class EditFormView {
-  #element = null;
+export default class EditFormView extends AbstractView{
   #point = null;
   #offers = null;
   #destinations = null;
 
   constructor (point, offers, destinations) {
+    super();
     this.#point = point;
     this.#offers = offers;
     this.#destinations = destinations;
@@ -109,15 +109,23 @@ export default class EditFormView {
     return createEditFormTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setRollupClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupClickHandler);
+  };
 
-    return this.#element;
-  }
+  #rollupClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }
