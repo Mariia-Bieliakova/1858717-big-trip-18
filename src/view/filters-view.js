@@ -1,28 +1,32 @@
 import AbstractView from '../framework/view/abstract-view';
 
-const createFilterTemplate = () => (
+const createFilterItemsTemplate = (filters) =>
+  Object.entries(filters).map((filter) =>{
+    const filterName = filter[1].name;
+    const isChecked = filter[1].isChecked;
+    const isDisabled = filter[1].isDisabled;
+
+    return `<div class="trip-filters__filter">
+      <input id="filter-${filterName}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterName}" ${isChecked ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+      <label class="trip-filters__filter-label" for="filter-${filterName}">${filterName}</label>
+    </div>`;}).join('');
+
+const createFilterTemplate = (filters) => (
   `<form class="trip-filters" action="#" method="get">
-    <div class="trip-filters__filter">
-      <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
-      <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-    </div>
-
-    <div class="trip-filters__filter">
-      <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" disabled>
-      <label class="trip-filters__filter-label" for="filter-future">Future</label>
-    </div>
-
-    <div class="trip-filters__filter">
-      <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" disabled>
-      <label class="trip-filters__filter-label" for="filter-past">Past</label>
-    </div>
-
+    ${createFilterItemsTemplate(filters)}
     <button class="visually-hidden" type="submit">Accept filter</button>
   </form>`
 );
 
 export default class FiltersView extends AbstractView {
+  #filters = null;
+
+  constructor (filters) {
+    super();
+    this.#filters = filters;
+  }
+
   get template() {
-    return createFilterTemplate();
+    return createFilterTemplate(this.#filters);
   }
 }

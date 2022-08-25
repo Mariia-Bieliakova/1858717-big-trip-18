@@ -8,4 +8,8 @@ const NoPointMessage = {
   FUTURE: 'There are no future events now'
 };
 
-export { TYPE, DESTINATION, NoPointMessage };
+export {
+  TYPE,
+  DESTINATION,
+  NoPointMessage
+};
