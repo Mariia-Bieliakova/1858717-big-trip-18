@@ -32,8 +32,7 @@ const durationInPoint = (dateFrom, dateTo) => {
   return `${setNumberInFormat(differenceInMinute)}M`;
 };
 
-const isOfferChecked = (offer, point) =>
-  point.offers.some((userOffer) => userOffer === offer.id);
+const isOfferChecked = (offer, point) => point.offers.some((userOffer) => userOffer === offer.id);
 
 const findSelectedOffers = (point, generatedOffers) => {
   const offersByType = generatedOffers
