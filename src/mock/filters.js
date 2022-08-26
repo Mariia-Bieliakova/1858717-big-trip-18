@@ -8,17 +8,17 @@ const generateFilters = (points) => {
     EVERYTHING: {
       name: 'everything',
       isChecked: true,
-      isDisabled: Boolean(points.length === 0)
+      isDisabled: points.length === 0
     },
     FUTURE: {
       name: 'future',
       isChecked: false,
-      isDisabled: Boolean(futurePoints.length === 0)
+      isDisabled: futurePoints.length === 0
     },
     PAST: {
       name: 'past',
       isChecked: false,
-      isDisabled: Boolean(pastPoints.length === 0)
+      isDisabled: pastPoints.length === 0
     }
   };
 };
