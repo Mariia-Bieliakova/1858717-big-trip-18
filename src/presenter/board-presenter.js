@@ -1,11 +1,10 @@
 import SortingView from '../view/sorting-view';
-import TripPointsListView from '../view/trip-points-list-view';
-import EditFormView from '../view/edit-form-view';
-import TripPointView from '../view/trip-point-view';
+import TripPointsListView from '../view/points-list-view';
 import NoPointView from '../view/no-points-view';
 import { NoPointMessage } from '../const';
-import { isEscKey } from '../utils/common';
-import { render, replace } from '../framework/render';
+import { render } from '../framework/render';
+import PointPresenter from './point-presenter';
+import { updateItem } from '../utils/common';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -17,6 +16,10 @@ export default class BoardPresenter {
   #boardDestinations = [];
 
   #listComponent = new TripPointsListView();
+  #sortComponent = new SortingView();
+  #noPointComponent = null;
+
+  #pointPresenter = new Map();
 
   constructor (boardContainer, pointsModel) {
     this.#boardContainer = boardContainer;
@@ -32,52 +35,53 @@ export default class BoardPresenter {
   };
 
   #renderPoint = (point, offers, destinations) => {
-    const pointComponent = new TripPointView(point, offers, destinations);
-    const editFormComponent = new EditFormView(point, offers, destinations);
+    const pointPresenter = new PointPresenter(this.#listComponent.element, this.#handlePointChange, this.#handleModeChange);
+    pointPresenter.init(point, offers, destinations);
+    this.#pointPresenter.set(point.id, pointPresenter);
+  };
 
-    const replaceCardToForm = () => {
-      replace(editFormComponent, pointComponent);
-    };
+  #handlePointChange = (updatedPoint, offers, destinations) => {
+    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, offers, destinations);
+  };
 
-    const replaceFormToCard = () => {
-      replace(pointComponent, editFormComponent);
-    };
+  #handleModeChange = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.resetView());
+  };
 
-    const closeEditForm = () => {
-      replaceFormToCard();
-      document.removeEventListener('keydown', onEscKeyDown);
-    };
+  #renderSort = () => {
+    render(this.#sortComponent, this.#boardContainer);
+  };
 
-    function onEscKeyDown (evt) {
-      if (isEscKey(evt)) {
-        evt.preventDefault();
-        closeEditForm();
-      }
-    }
+  #renderNoPoints = (noPointMessage) => {
+    this.#noPointComponent = new NoPointView(noPointMessage);
+    render(this.#noPointComponent, this.#boardContainer);
+  };
 
-    pointComponent.setRollupClickHandler(() => {
-      replaceCardToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
+  #renderPoints = () => {
+    this.#boardPoints.forEach((point) => this.#renderPoint(point, this.#boardOffers, this.#boardDestinations));
+  };
 
-    editFormComponent.setFormSubmitHandler(closeEditForm);
+  #renderPointsList = () => {
+    render(this.#listComponent, this.#boardContainer);
+    this.#renderPoints();
+  };
 
-    editFormComponent.setRollupClickHandler(closeEditForm);
-
-    render(pointComponent, this.#listComponent.element);
+  #clearPointList = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   };
 
   #renderBoard = () => {
-    render(new SortingView(), this.#boardContainer);
+    this.#renderSort();
 
     this.#noPointMessage = NoPointMessage.EVERYTHING;
 
     if (this.#boardPoints.length === 0) {
-      render(new NoPointView(this.#noPointMessage), this.#boardContainer);
+      this.#renderNoPoints(this.#noPointMessage);
       return;
     }
-    render(this.#listComponent, this.#boardContainer);
 
-    this.#boardPoints.forEach((point) => this.#renderPoint(point, this.#boardOffers, this.#boardDestinations));
+    this.#renderPointsList();
   };
 }
