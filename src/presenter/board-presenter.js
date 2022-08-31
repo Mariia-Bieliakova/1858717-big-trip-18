@@ -40,9 +40,9 @@ export default class BoardPresenter {
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
-  #handlePointChange = (updatedPoint, offers, destinations) => {
+  #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, offers, destinations);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#boardOffers, this.#boardDestinations);
   };
 
   #handleModeChange = () => {

@@ -100,11 +100,11 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    this.#changeData(point, this.#offers, this.#destinations);
+    this.#changeData(point);
     this.#replaceFormToCard();
   };
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite}, this.#offers, this.#destinations);
+    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
   };
 }
