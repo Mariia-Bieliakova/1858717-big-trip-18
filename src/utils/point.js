@@ -56,6 +56,17 @@ const createTypeListTemplate = (types) => types.map((type) => {
         </div>`;
 }).join('');
 
+const sortByDate = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+
+const sortByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+const sortByDuration = (pointA, pointB) => {
+  const durationInA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const durationInB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+
+  return durationInB - durationInA;
+};
+
 export {
   humanizePointDate,
   humanizePointTime,
@@ -64,5 +75,8 @@ export {
   isOfferChecked,
   findSelectedOffers,
   findDestination,
-  createTypeListTemplate
+  createTypeListTemplate,
+  sortByDate,
+  sortByDuration,
+  sortByPrice
 };

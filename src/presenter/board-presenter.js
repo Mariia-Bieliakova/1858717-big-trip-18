@@ -1,10 +1,11 @@
 import SortingView from '../view/sorting-view';
 import TripPointsListView from '../view/points-list-view';
 import NoPointView from '../view/no-points-view';
-import { NoPointMessage } from '../const';
+import { NoPointMessage, SortType } from '../const';
 import { render } from '../framework/render';
 import PointPresenter from './point-presenter';
 import { updateItem } from '../utils/common';
+import { sortByDate, sortByDuration, sortByPrice } from '../utils/point';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -20,6 +21,7 @@ export default class BoardPresenter {
   #noPointComponent = null;
 
   #pointPresenter = new Map();
+  #currentSortType = SortType.DEFAULT;
 
   constructor (boardContainer, pointsModel) {
     this.#boardContainer = boardContainer;
@@ -27,7 +29,7 @@ export default class BoardPresenter {
   }
 
   init = () => {
-    this.#boardPoints = [...this.#pointsModel.points];
+    this.#boardPoints = [...this.#pointsModel.points].sort(sortByDate);
     this.#boardOffers = [...this.#pointsModel.offers];
     this.#boardDestinations = [...this.#pointsModel.destinations];
 
@@ -45,12 +47,37 @@ export default class BoardPresenter {
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#boardOffers, this.#boardDestinations);
   };
 
+  #sortPoints = (sortType) => {
+    switch (sortType) {
+      case SortType.DURATION:
+        this.#boardPoints.sort(sortByDuration);
+        break;
+      case SortType.PRICE:
+        this.#boardPoints.sort(sortByPrice);
+        break;
+      default:
+        this.#boardPoints.sort(sortByDate);
+    }
+    this.#currentSortType = sortType;
+  };
+
   #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#sortPoints(sortType);
+    this.#clearPointList();
+    this.#renderPointsList();
+  };
+
   #renderSort = () => {
     render(this.#sortComponent, this.#boardContainer);
+    this.#sortPoints(this.#currentSortType);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };
 
   #renderNoPoints = (noPointMessage) => {
