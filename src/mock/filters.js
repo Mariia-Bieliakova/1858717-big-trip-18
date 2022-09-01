@@ -2,7 +2,7 @@ import { isInPast, isInFuture } from '../utils/filter';
 
 const generateFilters = (points) => {
   const futurePoints = points.filter((point) => isInFuture(point.dateFrom));
-  const pastPoints = points.filter((point) => isInPast(point.dateFrom));
+  const pastPoints = points.filter((point) => isInPast(point.dateTo));
 
   return {
     EVERYTHING: {
