@@ -29,20 +29,21 @@ export default class BoardPresenter {
   }
 
   init = () => {
-    this.#boardPoints = [...this.#pointsModel.points].sort(sortByDate);
+    this.#boardPoints = [...this.#pointsModel.points];
     this.#boardOffers = [...this.#pointsModel.offers];
     this.#boardDestinations = [...this.#pointsModel.destinations];
 
+    this.#sortPoints(SortType.DEFAULT);
     this.#renderBoard();
   };
 
   #renderPoint = (point, offers, destinations) => {
-    const pointPresenter = new PointPresenter(this.#listComponent.element, this.#handlePointChange, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#listComponent.element, this.#pointChangeHandler, this.#modeChangeHandler);
     pointPresenter.init(point, offers, destinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   };
 
-  #handlePointChange = (updatedPoint) => {
+  #pointChangeHandler = (updatedPoint) => {
     this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#boardOffers, this.#boardDestinations);
   };
@@ -55,17 +56,21 @@ export default class BoardPresenter {
       case SortType.PRICE:
         this.#boardPoints.sort(sortByPrice);
         break;
-      default:
+      case SortType.DEFAULT:
         this.#boardPoints.sort(sortByDate);
+        break;
+      default:
+        throw new Error(`Unknown sort type: ${sortType}`);
+
     }
     this.#currentSortType = sortType;
   };
 
-  #handleModeChange = () => {
+  #modeChangeHandler = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
-  #handleSortTypeChange = (sortType) => {
+  #sortTypeChangeHandler = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
@@ -77,7 +82,7 @@ export default class BoardPresenter {
   #renderSort = () => {
     render(this.#sortComponent, this.#boardContainer);
     this.#sortPoints(this.#currentSortType);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+    this.#sortComponent.setSortTypeChangeHandler(this.#sortTypeChangeHandler);
   };
 
   #renderNoPoints = (noPointMessage) => {
