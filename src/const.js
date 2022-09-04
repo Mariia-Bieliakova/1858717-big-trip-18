@@ -8,8 +8,15 @@ const NoPointMessage = {
   FUTURE: 'There are no future events now'
 };
 
+const SortType = {
+  DEFAULT: 'day',
+  PRICE: 'price',
+  DURATION: 'time'
+};
+
 export {
   TYPE,
   DESTINATION,
-  NoPointMessage
+  NoPointMessage,
+  SortType
 };
