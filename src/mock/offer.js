@@ -33,5 +33,9 @@ export const generateOffers = () => ([
         price: 10
       }
     ]
+  },
+  {
+    type: 'drive',
+    offers: null
   }
 ]);
