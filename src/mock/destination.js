@@ -7,6 +7,14 @@ export const generateDestinations = () => ([
       {
         src: `http://picsum.photos/300/200?r=${Math.random()}`,
         description: 'Chamonix parliament building'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'Chamonix architecture'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'Landscapes'
       }
     ]
   },
@@ -18,6 +26,33 @@ export const generateDestinations = () => ([
       {
         src: `http://picsum.photos/300/200?r=${Math.random()}`,
         description: 'View of Amsterdam'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'Amsterdam landscapes'
+      }
+    ]
+  },
+  {
+    id: 3,
+    description: 'Geneva is the most interesting city ever.',
+    name: 'Geneva',
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'View of Geneva'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'Geneva'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'WoW'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'You must to see it!'
       }
     ]
   }

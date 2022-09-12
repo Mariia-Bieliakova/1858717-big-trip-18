@@ -47,15 +47,6 @@ const findSelectedOffers = (point, generatedOffers) => {
 const findDestination = (point, destinations) => destinations
   .find((destination) => point.destination === destination.id);
 
-const createTypeListTemplate = (types) => types.map((type) => {
-  const typeOfPoint = type[0].toUpperCase() + type.slice(1);
-
-  return `<div class="event__type-item">
-          <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${typeOfPoint}</label>
-        </div>`;
-}).join('');
-
 const sortByDate = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
 
 const sortByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
@@ -75,7 +66,6 @@ export {
   isOfferChecked,
   findSelectedOffers,
   findDestination,
-  createTypeListTemplate,
   sortByDate,
   sortByDuration,
   sortByPrice

@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 const generateDate = () => {
   const maxDaysGap = 2000;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-
   return dayjs().add(daysGap, 'm').toDate();
 };
 
