@@ -39,6 +39,10 @@ const findSelectedOffers = (point, generatedOffers) => {
   const offersByType = generatedOffers
     .find((offer) => point.type === offer.type);
 
+  if (!offersByType.offers) {
+    return;
+  }
+
   return offersByType.offers.filter((offer) =>
     point.offers
       .some((offerId) => offerId === offer.id));
