@@ -1,13 +1,19 @@
 import AbstractView from '../framework/view/abstract-view';
 import { humanizePointDate, humanizePointTime, durationInPoint, findDestination, findSelectedOffers} from '../utils/point';
 
-const createOffersTemplate = (offers) =>
-  offers.map((offer) =>
-    `<li class="event__offer">
-      <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </li>`).join('');
+const createOffersTemplate = (offers) => {
+  if (!offers) {
+    return '';
+  }
+
+  return offers.map((offer) => (`
+      <li class="event__offer">
+        <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </li>
+    `)).join('');
+};
 
 
 const createPointTemplate = (point, offers, destinations) => {
