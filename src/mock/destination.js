@@ -55,5 +55,28 @@ export const generateDestinations = () => ([
         description: 'You must to see it!'
       }
     ]
+  },
+  {
+    id: 4,
+    description: 'Paris is the most interesting city ever.',
+    name: 'Paris',
+    pictures: [
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'View of Geneva'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'Geneva'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'WoW'
+      },
+      {
+        src: `http://picsum.photos/300/200?r=${Math.random()}`,
+        description: 'You must to see it!'
+      }
+    ]
   }
 ]);

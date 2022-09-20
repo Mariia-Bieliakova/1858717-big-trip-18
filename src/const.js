@@ -17,15 +17,33 @@ const SortType = {
   DURATION: 'time'
 };
 
+const FilterType = {
+  EVERYTHING: 'EVERYTHING',
+  FUTURE: 'FUTURE',
+  PAST: 'PAST'
+};
+
 const BLANK_POINT = {
   id: nanoid(),
   basePrice: 0,
   dateFrom: dayjs().toDate(),
   dateTo: dayjs().toDate(),
-  destination: 2,
+  destination: 0,
   isFavorite: false,
   offers: [],
-  type: ''
+  type: TYPE[0]
+};
+
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT'
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR'
 };
 
 export {
@@ -33,5 +51,8 @@ export {
   DESTINATION,
   NoPointMessage,
   SortType,
-  BLANK_POINT
+  BLANK_POINT,
+  UserAction,
+  UpdateType,
+  FilterType
 };

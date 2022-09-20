@@ -32,6 +32,8 @@ const durationInPoint = (dateFrom, dateTo) => {
   return `${setNumberInFormat(differenceInMinute)}M`;
 };
 
+const isDatesEqual = (dateA, dateB) => dayjs(dateA).isSame(dateB);
+
 const isOfferChecked = (offer, point) =>
   point.offers.some((userOffer) => userOffer === offer.id);
 
@@ -39,7 +41,7 @@ const findSelectedOffers = (point, generatedOffers) => {
   const offersByType = generatedOffers
     .find((offer) => point.type === offer.type);
 
-  if (!offersByType.offers) {
+  if (!offersByType || !offersByType.offers) {
     return;
   }
 
@@ -62,6 +64,7 @@ const sortByDuration = (pointA, pointB) => {
   return durationB - durationA;
 };
 
+
 export {
   humanizePointDate,
   humanizePointTime,
@@ -72,5 +75,6 @@ export {
   findDestination,
   sortByDate,
   sortByDuration,
-  sortByPrice
+  sortByPrice,
+  isDatesEqual
 };
