@@ -82,7 +82,7 @@ const createDescriptionTemplate = (pickedDestination) => {
   `);
 };
 
-const createEditFormTemplate = (point, offers, destinations) => {
+const createEditFormTemplate = (point, offers, destinations, typeOfForm) => {
   const {type, dateFrom, dateTo, basePrice} = point;
 
   const dateStart = humanizeFullDate(dateFrom);
@@ -138,7 +138,7 @@ const createEditFormTemplate = (point, offers, destinations) => {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__reset-btn" type="reset">${typeOfForm === null ? 'Delete' : 'Cancel'}</button>
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>
           </button>
@@ -159,18 +159,20 @@ export default class EditFormView extends AbstractStatefulView{
   #destinations = null;
   #dateFromPicker = null;
   #dateToPicker = null;
+  #typeOfForm = null;
 
-  constructor (point, offers, destinations) {
+  constructor (point, offers, destinations, typeOfForm = null) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#typeOfForm = typeOfForm;
     this._state = EditFormView.parsePointToState(point, this.#destinations);
 
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createEditFormTemplate(this._state, this.#offers, this.#destinations);
+    return createEditFormTemplate(this._state, this.#offers, this.#destinations, this.#typeOfForm);
   }
 
   setFormSubmitHandler = (callback) => {
@@ -180,7 +182,22 @@ export default class EditFormView extends AbstractStatefulView{
 
   setDeleteClickHandler = (callback) => {
     this._callback.deleteClick = callback;
+
+    if (this.#typeOfForm !== null) {
+      return;
+    }
+
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+  };
+
+  setCancelClickHandler = (callback) => {
+    this._callback.cancelClick = callback;
+
+    if (this.#typeOfForm === null) {
+      return;
+    }
+
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formCancelClickHandler);
   };
 
   setRollupClickHandler = (callback) => {
@@ -215,7 +232,7 @@ export default class EditFormView extends AbstractStatefulView{
         maxDate: this._state.dateTo,
         defaultDate: this._state.dateFrom,
         onChange: this.#dateFromChangeHandler,
-        time24hr: true
+        'time_24hr': true
       }
     );
   };
@@ -229,7 +246,7 @@ export default class EditFormView extends AbstractStatefulView{
         minDate: this._state.dateFrom,
         defaultDate: this._state.dateTo,
         onChange: this.#dateToChangeHandler,
-        time24hr: true
+        'time_24hr': true
       }
     );
   };
@@ -248,6 +265,7 @@ export default class EditFormView extends AbstractStatefulView{
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setRollupClickHandler(this._callback.click);
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setCancelClickHandler(this._callback.cancelClick);
   };
 
   #dateFromChangeHandler = ([userDate]) => {
@@ -274,7 +292,7 @@ export default class EditFormView extends AbstractStatefulView{
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    const submitButton = document.querySelector('.event__save-btn');
+    const submitButton = this.element.querySelector('.event__save-btn');
     submitButton.disabled = false;
 
     if (evt.target.value === '') {
@@ -331,12 +349,25 @@ export default class EditFormView extends AbstractStatefulView{
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
+    const destinationInput = this.element.querySelector('.event__input--destination');
+    const submitButton = this.element.querySelector('.event__save-btn');
+
+    if (destinationInput.value === '') {
+      submitButton.disabled = true;
+      return;
+    }
+
     this._callback.formSubmit(EditFormView.parseStateToPoint(this._state));
   };
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(EditFormView.parseStateToPoint(this._state));
+  };
+
+  #formCancelClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.cancelClick(EditFormView.parseStateToPoint(this._state));
   };
 
   static parsePointToState = (point) => ({...point});

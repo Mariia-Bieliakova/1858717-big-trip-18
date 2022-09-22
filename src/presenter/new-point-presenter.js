@@ -36,10 +36,10 @@ export default class PointNewPresenter {
       return;
     }
 
-    this.#editFormComponent = new EditFormView(this.blankPoint, this.#offers, this.#destinations);
+    this.#editFormComponent = new EditFormView(this.blankPoint, this.#offers, this.#destinations, 'create');
     this.#editFormComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#editFormComponent.setRollupClickHandler(this.#handleCloseEditForm);
-    this.#editFormComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#editFormComponent.setCancelClickHandler(this.#handleCancelClick);
 
     render(this.#editFormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
@@ -69,7 +69,7 @@ export default class PointNewPresenter {
     this.destroy();
   };
 
-  #handleDeleteClick = () => {
+  #handleCancelClick = () => {
     this.destroy();
   };
 

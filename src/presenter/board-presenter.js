@@ -2,7 +2,7 @@ import SortingView from '../view/sorting-view';
 import TripPointsListView from '../view/points-list-view';
 import NoPointView from '../view/no-points-view';
 import { FilterType, NoPointMessage, SortType, UpdateType, UserAction } from '../const';
-import { remove, render } from '../framework/render';
+import { remove, render, RenderPosition } from '../framework/render';
 import PointPresenter from './point-presenter';
 import PointNewPresenter from './new-point-presenter';
 import { sortByDate, sortByDuration, sortByPrice } from '../utils/point';
@@ -59,6 +59,7 @@ export default class BoardPresenter {
   }
 
   init = () => {
+    render(this.#listComponent, this.#boardContainer);
     this.#renderBoard();
   };
 
@@ -122,12 +123,12 @@ export default class BoardPresenter {
     this.#sortComponent = new SortingView(this.#currentSortType);
     this.#sortComponent.setSortTypeChangeHandler(this.#sortTypeChangeHandler);
 
-    render(this.#sortComponent, this.#boardContainer);
+    render(this.#sortComponent, this.#boardContainer, RenderPosition.AFTERBEGIN);
   };
 
   #renderNoPoints = (noPointMessage) => {
     this.#noPointComponent = new NoPointView(noPointMessage);
-    render(this.#noPointComponent, this.#boardContainer);
+    render(this.#noPointComponent, this.#listComponent.element);
   };
 
   #renderPoints = (points) => {
@@ -146,7 +147,6 @@ export default class BoardPresenter {
 
     this.#renderSort();
 
-    render(this.#listComponent, this.#boardContainer);
     this.#renderPoints(points);
   };
 
@@ -155,7 +155,6 @@ export default class BoardPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
-    remove(this.#listComponent);
     remove(this.#noPointComponent);
     remove(this.#sortComponent);
 
