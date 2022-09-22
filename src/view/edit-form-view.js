@@ -317,9 +317,12 @@ export default class EditFormView extends AbstractStatefulView{
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
+    const submitButton = this.element.querySelector('.event__save-btn');
+    submitButton.disabled = false;
 
     if (evt.target.value < 1) {
-      throw new Error('Incorrect value of price');
+      submitButton.disabled = true;
+      return;
     }
 
     this.updateElement({
@@ -351,6 +354,12 @@ export default class EditFormView extends AbstractStatefulView{
     evt.preventDefault();
     const destinationInput = this.element.querySelector('.event__input--destination');
     const submitButton = this.element.querySelector('.event__save-btn');
+    const priceInput = this.element.querySelector('.event__input--price');
+
+    if (priceInput.value < 1) {
+      submitButton.disabled = true;
+      return;
+    }
 
     if (destinationInput.value === '') {
       submitButton.disabled = true;
