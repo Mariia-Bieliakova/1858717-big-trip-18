@@ -1,7 +1,7 @@
 import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { humanizeFullDate, isOfferChecked, findDestination} from '../utils/point';
-import { TYPE } from '../const';
+import { TYPE, FormType } from '../const';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -83,7 +83,7 @@ const createDescriptionTemplate = (pickedDestination) => {
 };
 
 const createEditFormTemplate = (point, offers, destinations, typeOfForm) => {
-  const {type, dateFrom, dateTo, basePrice} = point;
+  const {type, dateFrom, dateTo, basePrice, isDisabledSubmitButton} = point;
 
   const dateStart = humanizeFullDate(dateFrom);
   const dateFinish = humanizeFullDate(dateTo);
@@ -159,20 +159,20 @@ export default class EditFormView extends AbstractStatefulView{
   #destinations = null;
   #dateFromPicker = null;
   #dateToPicker = null;
-  #typeOfForm = null;
+  #formType = null;
 
-  constructor (point, offers, destinations, typeOfForm = null) {
+  constructor (point, offers, destinations, formType = FormType.EDITING) {
     super();
     this.#offers = offers;
     this.#destinations = destinations;
-    this.#typeOfForm = typeOfForm;
-    this._state = EditFormView.parsePointToState(point, this.#destinations);
+    this.#formType = formType;
+    this._state = EditFormView.parsePointToState(point, this.#formType);
 
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createEditFormTemplate(this._state, this.#offers, this.#destinations, this.#typeOfForm);
+    return createEditFormTemplate(this._state, this.#offers, this.#destinations, this.#formType);
   }
 
   setFormSubmitHandler = (callback) => {
@@ -183,7 +183,7 @@ export default class EditFormView extends AbstractStatefulView{
   setDeleteClickHandler = (callback) => {
     this._callback.deleteClick = callback;
 
-    if (this.#typeOfForm !== null) {
+    if (this.#formType === FormType.CREATING) {
       return;
     }
 
@@ -193,7 +193,7 @@ export default class EditFormView extends AbstractStatefulView{
   setCancelClickHandler = (callback) => {
     this._callback.cancelClick = callback;
 
-    if (this.#typeOfForm === null) {
+    if (this.#formType === FormType.EDITING) {
       return;
     }
 
@@ -292,20 +292,12 @@ export default class EditFormView extends AbstractStatefulView{
 
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
-    const submitButton = this.element.querySelector('.event__save-btn');
-    submitButton.disabled = false;
-
-    if (evt.target.value === '') {
-      submitButton.disabled = true;
-
-      return;
-    }
 
     const pickedDestination = this.#destinations.find((destination) =>
       evt.target.value === destination.name);
 
     if (!pickedDestination) {
-      submitButton.disabled = true;
+      evt.target.value = '';
 
       return;
     }
@@ -317,13 +309,6 @@ export default class EditFormView extends AbstractStatefulView{
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
-    const submitButton = this.element.querySelector('.event__save-btn');
-    submitButton.disabled = false;
-
-    if (evt.target.value < 1) {
-      submitButton.disabled = true;
-      return;
-    }
 
     this.updateElement({
       basePrice: evt.target.value

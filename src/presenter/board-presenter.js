@@ -45,9 +45,9 @@ export default class BoardPresenter {
         return filteredPoints.sort(sortByPrice);
       case SortType.DEFAULT:
         return filteredPoints.sort(sortByDate);
+      default:
+        throw new Error(`Unknown sort type: ${this.#currentSortType}`);
     }
-
-    return filteredPoints.sort(this.#currentSortType);
   }
 
   get offers() {
@@ -86,6 +86,8 @@ export default class BoardPresenter {
       case UserAction.DELETE_POINT:
         this.#pointsModel.deletePoint(updateType, update);
         break;
+      default:
+        throw new Error(`Unknown action type: ${actionType}`);
     }
   };
 
@@ -102,6 +104,8 @@ export default class BoardPresenter {
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
+      default:
+        throw new Error(`Unknown update type: ${updateType}`);
     }
   };
 
@@ -155,7 +159,10 @@ export default class BoardPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
-    remove(this.#noPointComponent);
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+    }
+
     remove(this.#sortComponent);
 
     if (resetSortType) {

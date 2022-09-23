@@ -15,6 +15,8 @@ const filterPoints = (filterType, points) => {
       return futurePoints;
     case FilterType.PAST:
       return pastPoints;
+    default:
+      throw new Error(`Unknown filter type: ${filterType}`);
   }
 };
 

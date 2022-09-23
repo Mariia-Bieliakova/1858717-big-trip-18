@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 
 const TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 
@@ -24,7 +23,6 @@ const FilterType = {
 };
 
 const BLANK_POINT = {
-  id: nanoid(),
   basePrice: 0,
   dateFrom: dayjs().toDate(),
   dateTo: dayjs().toDate(),
@@ -46,6 +44,11 @@ const UpdateType = {
   MAJOR: 'MAJOR'
 };
 
+const FormType = {
+  EDITING: 'EDITING',
+  CREATING: 'CREARING'
+};
+
 export {
   TYPE,
   DESTINATION,
@@ -54,5 +57,6 @@ export {
   BLANK_POINT,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  FormType
 };

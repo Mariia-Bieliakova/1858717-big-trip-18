@@ -1,7 +1,7 @@
 import { render, remove, RenderPosition } from '../framework/render';
 import EditFormView from '../view/edit-form-view';
 import { nanoid } from 'nanoid';
-import { UserAction, UpdateType, BLANK_POINT } from '../const';
+import { UserAction, UpdateType, BLANK_POINT, FormType } from '../const';
 import { isEscKey } from '../utils/common';
 
 export default class PointNewPresenter {
@@ -36,7 +36,7 @@ export default class PointNewPresenter {
       return;
     }
 
-    this.#editFormComponent = new EditFormView(this.blankPoint, this.#offers, this.#destinations, 'create');
+    this.#editFormComponent = new EditFormView(this.blankPoint, this.#offers, this.#destinations, FormType.CREATING);
     this.#editFormComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#editFormComponent.setRollupClickHandler(this.#handleCloseEditForm);
     this.#editFormComponent.setCancelClickHandler(this.#handleCancelClick);

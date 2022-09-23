@@ -1,6 +1,8 @@
 import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 
+const MAX_DISPLAYED_DESTINATIONS = 3;
+
 const getDestinations = (points, destinations) => {
   if (points.length === 0) {
     return 'Your route';
@@ -12,8 +14,8 @@ const getDestinations = (points, destinations) => {
 
   selectedDestinations = selectedDestinations.map((destination) => destination.name);
 
-  if (selectedDestinations.length > 3) {
-    return [selectedDestinations[0], selectedDestinations[selectedDestinations.length - 1]].join(' &mdash; ... &mdash; ');
+  if (selectedDestinations.length > MAX_DISPLAYED_DESTINATIONS) {
+    return [selectedDestinations[0], selectedDestinations.at(-1)].join(' &mdash; ... &mdash; ');
   }
 
   return selectedDestinations.join(' &mdash; ');
