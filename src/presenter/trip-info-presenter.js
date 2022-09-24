@@ -1,16 +1,40 @@
 import TripInfoView from '../view/trip-info-view';
-import { render, RenderPosition } from '../framework/render';
+import { remove, render, RenderPosition } from '../framework/render';
+import { sortByDate } from '../utils/point';
 
 export default class TripInfoPresenter {
-  tripInfo = new TripInfoView();
   #infoContainer = null;
+  #tripInfoComponent = null;
+  #pointsModel = null;
+  #points = [];
+  #offers = [];
+  #destinations = [];
+  #boardPoints = new Map();
 
-  constructor (infoContainer) {
+  constructor (infoContainer, pointsModel) {
     this.#infoContainer = infoContainer;
+    this.#pointsModel = pointsModel;
+
+    this.#points = this.#pointsModel.points;
+    this.#offers = this.#pointsModel.offers;
+    this.#destinations = this.#pointsModel.destinations;
+
+    this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   init = () => {
-    render(this.tripInfo, this.#infoContainer, RenderPosition.AFTERBEGIN);
+    this.#points.sort(sortByDate);
+    this.#tripInfoComponent = new TripInfoView(this.#points, this.#offers, this.#destinations);
+
+    render(this.#tripInfoComponent, this.#infoContainer, RenderPosition.AFTERBEGIN);
+    this.#boardPoints.clear();
   };
 
+  #handleModelEvent = () => {
+    remove(this.#tripInfoComponent);
+
+    this.#points = this.#pointsModel.points;
+
+    this.init();
+  };
 }
