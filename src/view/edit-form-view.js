@@ -83,7 +83,7 @@ const createDescriptionTemplate = (pickedDestination) => {
 };
 
 const createEditFormTemplate = (point, offers, destinations, typeOfForm) => {
-  const {type, dateFrom, dateTo, basePrice, isDisabledSubmitButton} = point;
+  const {type, dateFrom, dateTo, basePrice} = point;
 
   const dateStart = humanizeFullDate(dateFrom);
   const dateFinish = humanizeFullDate(dateTo);

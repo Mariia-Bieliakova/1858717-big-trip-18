@@ -34,6 +34,7 @@ export default class TripInfoPresenter {
     remove(this.#tripInfoComponent);
 
     this.#points = this.#pointsModel.points;
+    this.#destinations = this.#pointsModel.destinations;
 
     this.init();
   };
