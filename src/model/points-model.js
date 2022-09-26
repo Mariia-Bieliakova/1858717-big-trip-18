@@ -60,7 +60,7 @@ export default class PointsModel extends Observable {
       ];
       this._notify(updateType, updatedPoint);
     } catch(err) {
-      throw new Error('Can\'t update point');
+      throw new Error(`Can't update point: ${update}. Error: ${err}`);
     }
   };
 

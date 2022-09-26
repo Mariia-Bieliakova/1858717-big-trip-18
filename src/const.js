@@ -50,6 +50,11 @@ const FormType = {
   CREATING: 'CREARING'
 };
 
+const ApiData = {
+  END_POINT: 'https://18.ecmascript.pages.academy/big-trip',
+  AUTHORIZATION: 'Basic sjdhfksjdcnkjsdh'
+};
+
 export {
   TYPE,
   DESTINATION,
@@ -59,5 +64,6 @@ export {
   UserAction,
   UpdateType,
   FilterType,
-  FormType
+  FormType,
+  ApiData
 };

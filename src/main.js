@@ -6,15 +6,13 @@ import FilterModel from './model/filter-model';
 import NewPointButtonView from './view/new-point-button-view';
 import PointApiService from './point-api-service';
 import { render } from './framework/render';
-
-const AUTHORIZATION = 'Basic sjdhfksjdcnkjsdh';
-const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
+import { ApiData } from './const';
 
 const mainElement = document.querySelector('.trip-main');
 const tripFiltersElement = mainElement.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
 
-const pointsModel = new PointsModel(new PointApiService(END_POINT, AUTHORIZATION));
+const pointsModel = new PointsModel(new PointApiService(ApiData.END_POINT, ApiData.AUTHORIZATION));
 const filterModel = new FilterModel();
 const tripInfoPresenter = new TripInfoPresenter(mainElement, pointsModel);
 const boardPresenter = new BoardPresenter(tripEventsElement, pointsModel, filterModel);

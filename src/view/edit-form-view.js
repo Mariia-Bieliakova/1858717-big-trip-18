@@ -311,7 +311,7 @@ export default class EditFormView extends AbstractStatefulView{
     evt.preventDefault();
 
     this.updateElement({
-      basePrice: evt.target.value
+      basePrice: Number(evt.target.value)
     });
   };
 
