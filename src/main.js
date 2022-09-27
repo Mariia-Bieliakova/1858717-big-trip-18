@@ -4,13 +4,15 @@ import FilterPresenter from './presenter/filter-presenter';
 import PointsModel from './model/points-model';
 import FilterModel from './model/filter-model';
 import NewPointButtonView from './view/new-point-button-view';
+import PointApiService from './point-api-service';
 import { render } from './framework/render';
+import { ApiData } from './const';
 
 const mainElement = document.querySelector('.trip-main');
 const tripFiltersElement = mainElement.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
 
-const pointsModel = new PointsModel();
+const pointsModel = new PointsModel(new PointApiService(ApiData.END_POINT, ApiData.AUTHORIZATION));
 const filterModel = new FilterModel();
 const tripInfoPresenter = new TripInfoPresenter(mainElement, pointsModel);
 const boardPresenter = new BoardPresenter(tripEventsElement, pointsModel, filterModel);
@@ -26,9 +28,11 @@ const handleNewPointButtonClick = () => {
   newPointButtonComponent.element.disabled = true;
 };
 
-render(newPointButtonComponent, mainElement);
-newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
-
 tripInfoPresenter.init();
 filterPresenter.init();
 boardPresenter.init();
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, mainElement);
+    newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+  });

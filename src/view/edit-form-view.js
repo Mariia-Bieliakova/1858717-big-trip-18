@@ -83,7 +83,7 @@ const createDescriptionTemplate = (pickedDestination) => {
 };
 
 const createEditFormTemplate = (point, offers, destinations, typeOfForm) => {
-  const {type, dateFrom, dateTo, basePrice, isDisabledSubmitButton} = point;
+  const {type, dateFrom, dateTo, basePrice} = point;
 
   const dateStart = humanizeFullDate(dateFrom);
   const dateFinish = humanizeFullDate(dateTo);
@@ -311,7 +311,7 @@ export default class EditFormView extends AbstractStatefulView{
     evt.preventDefault();
 
     this.updateElement({
-      basePrice: evt.target.value
+      basePrice: Number(evt.target.value)
     });
   };
 

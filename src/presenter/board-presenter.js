@@ -1,6 +1,7 @@
 import SortingView from '../view/sorting-view';
 import TripPointsListView from '../view/points-list-view';
 import NoPointView from '../view/no-points-view';
+import LoadingView from '../view/loading-view';
 import { FilterType, NoPointMessage, SortType, UpdateType, UserAction } from '../const';
 import { remove, render, RenderPosition } from '../framework/render';
 import PointPresenter from './point-presenter';
@@ -17,10 +18,12 @@ export default class BoardPresenter {
   #listComponent = new TripPointsListView();
   #sortComponent = null;
   #noPointComponent = null;
+  #loadingComponent = new LoadingView();
 
   #pointPresenter = new Map();
   #pointNewPresenter = null;
   #currentSortType = SortType.DEFAULT;
+  #isLoading = true;
 
   constructor (boardContainer, pointsModel, filterModel) {
     this.#boardContainer = boardContainer;
@@ -104,6 +107,11 @@ export default class BoardPresenter {
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
       default:
         throw new Error(`Unknown update type: ${updateType}`);
     }
@@ -139,7 +147,16 @@ export default class BoardPresenter {
     points.forEach((point) => this.#renderPoint(point, this.offers, this.destinations));
   };
 
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#boardContainer);
+  };
+
   #renderBoard = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const points = this.points;
 
     this.#noPointMessage = NoPointMessage[this.#filterModel.filter];
@@ -164,6 +181,7 @@ export default class BoardPresenter {
     }
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;

@@ -41,12 +41,18 @@ const UserAction = {
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
-  MAJOR: 'MAJOR'
+  MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
 const FormType = {
   EDITING: 'EDITING',
   CREATING: 'CREARING'
+};
+
+const ApiData = {
+  END_POINT: 'https://18.ecmascript.pages.academy/big-trip',
+  AUTHORIZATION: 'Basic sjdhfksjdcnkjsdh'
 };
 
 export {
@@ -58,5 +64,6 @@ export {
   UserAction,
   UpdateType,
   FilterType,
-  FormType
+  FormType,
+  ApiData
 };
