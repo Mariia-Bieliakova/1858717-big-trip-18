@@ -31,8 +31,8 @@ const handleNewPointButtonClick = () => {
 tripInfoPresenter.init();
 filterPresenter.init();
 boardPresenter.init();
-pointsModel.init()
-  .finally(() => {
-    render(newPointButtonComponent, mainElement);
-    newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
-  });
+pointsModel.init(() => {
+  render(newPointButtonComponent, mainElement);
+  newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+});
+
