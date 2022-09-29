@@ -86,7 +86,7 @@ const createDescriptionTemplate = (pickedDestination) => {
 const createResetButtonText = (formType, isDeleting) => {
   if (formType === FormType.EDITING) {
     if (isDeleting) {
-      return 'Deleting';
+      return 'Deleting...';
     }
     return 'Delete';
   }
@@ -131,12 +131,12 @@ const createEditFormTemplate = (point, offers, destinations, typeOfForm) => {
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">
+            <label class="event__label  event__type-output" for="event-destination-${point.id}">
               ${typeOfPoint}
             </label>
             <input
               class="event__input  event__input--destination"
-              id="event-destination-1"
+              id="event-destination-${point.id}"
               type="text"
               name="event-destination"
               value="${pickedDestination ? he.encode(pickedDestination.name) : ''}" list="destination-list-1"
