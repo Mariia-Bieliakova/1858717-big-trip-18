@@ -55,6 +55,23 @@ const ApiData = {
   AUTHORIZATION: 'Basic sjdhfksjdcnkjsdh'
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
+};
+
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
+};
+
+const PointMode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
 export {
   TYPE,
   DESTINATION,
@@ -65,5 +82,8 @@ export {
   UpdateType,
   FilterType,
   FormType,
-  ApiData
+  ApiData,
+  TimeLimit,
+  Method,
+  PointMode
 };

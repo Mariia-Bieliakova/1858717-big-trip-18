@@ -36,3 +36,4 @@ pointsModel.init()
     render(newPointButtonComponent, mainElement);
     newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
   });
+

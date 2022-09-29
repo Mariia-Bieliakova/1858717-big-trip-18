@@ -1,6 +1,5 @@
 import { render, remove, RenderPosition } from '../framework/render';
 import EditFormView from '../view/edit-form-view';
-import { nanoid } from 'nanoid';
 import { UserAction, UpdateType, BLANK_POINT, FormType } from '../const';
 import { isEscKey } from '../utils/common';
 
@@ -11,22 +10,24 @@ export default class PointNewPresenter {
   #destroyCallback = null;
   #pointsModel = null;
 
-  #offers = [];
-  #destinations = [];
-
   constructor(pointListContainer, changeData, pointModel) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
     this.#pointsModel = pointModel;
-
-    this.#offers = this.#pointsModel.offers;
-    this.#destinations = this.#pointsModel.destinations;
   }
 
   get blankPoint() {
     return {
       ...BLANK_POINT
     };
+  }
+
+  get offers() {
+    return this.#pointsModel.offers;
+  }
+
+  get destinations() {
+    return this.#pointsModel.destinations;
   }
 
   init = (callback) => {
@@ -36,7 +37,7 @@ export default class PointNewPresenter {
       return;
     }
 
-    this.#editFormComponent = new EditFormView(this.blankPoint, this.#offers, this.#destinations, FormType.CREATING);
+    this.#editFormComponent = new EditFormView(this.blankPoint, this.offers, this.destinations, FormType.CREATING);
     this.#editFormComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#editFormComponent.setRollupClickHandler(this.#handleCloseEditForm);
     this.#editFormComponent.setCancelClickHandler(this.#handleCancelClick);
@@ -59,14 +60,31 @@ export default class PointNewPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
+  setSaving = () => {
+    this.#editFormComponent.updateElement({
+      isDisabled: true,
+      isSaving: true
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this.#editFormComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#editFormComponent.shake(resetFormState);
+  };
+
   #handleFormSubmit = (point) => {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point}
+      point
     );
-
-    this.destroy();
   };
 
   #handleCancelClick = () => {
