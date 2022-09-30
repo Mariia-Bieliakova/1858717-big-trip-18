@@ -368,14 +368,14 @@ export default class EditFormView extends AbstractStatefulView{
     evt.preventDefault();
     if (evt.target.tagName === 'INPUT') {
       const clickedOfferId = Number(evt.target.dataset.offerId);
-      const clickedOfferIndex = this._state.offers.indexOf(clickedOfferId);
+      const hasOffer = this._state.offers.includes(clickedOfferId);
 
-      if (clickedOfferIndex === -1) {
-        this._state.offers.push(clickedOfferId);
-        return;
-      }
+      const updatedOffers = hasOffer ?
+        this._state.offers.filter((offer) => offer.id !== clickedOfferId)
+        :
+        this._state.offers.concat(clickedOfferId);
 
-      this._state.offers.splice(clickedOfferIndex, 1);
+      this._setState({offers: updatedOffers});
     }
   };
 
