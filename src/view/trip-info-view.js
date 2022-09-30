@@ -15,20 +15,36 @@ const getDestinations = (points, destinations) => {
   selectedDestinations = selectedDestinations.map((destination) => destination.name);
 
   if (selectedDestinations.length > MAX_DISPLAYED_DESTINATIONS) {
-    return [selectedDestinations[0], selectedDestinations.at(-1)].join(' &mdash; ... &mdash; ');
+    const firstDestination = destinations.find((destination) => points[0].destination === destination.id).name;
+    const lastDestination = destinations.find((destination) => points.at(-1).destination === destination.id).name;
+
+    return [firstDestination, lastDestination].join(' &mdash; ... &mdash; ');
   }
 
   return selectedDestinations.join(' &mdash; ');
 };
 
-const getTripValue = (points) => {
+const getTripValue = (points, offers) => {
   if (points.length === 0) {
     return 0;
   }
 
-  const basePricesSum = points.reduce((total, point) => total + Number(point.basePrice), 0);
+  const basePricesSum = points.reduce((total, point) => total + point.basePrice, 0);
+  let offersPriceSum = 0;
 
-  return basePricesSum;
+  for (const point of points) {
+    const offersByType = offers.find((offer) => point.type === offer.type);
+
+    for (const offer of offersByType.offers) {
+      if (point.offers.includes(offer.id)) {
+        offersPriceSum += offer.price;
+      }
+    }
+  }
+
+  const fullTripPrice = basePricesSum + offersPriceSum;
+
+  return fullTripPrice;
 };
 
 const getTripDates = (points) => {
@@ -37,12 +53,12 @@ const getTripDates = (points) => {
   }
 
   const dateFrom = dayjs(points[0].dateFrom).format('D MMM');
-  const dateTo = dayjs(points[points.length - 1].dateTo).format('D MMM');
+  const dateTo = dayjs(points.at(-1).dateTo).format('D MMM');
 
   return [dateFrom, dateTo].join(' - ');
 };
 
-const createTripInfoTemplate = (points, destinations) => (
+const createTripInfoTemplate = (points, offers, destinations ) => (
   `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
       <h1 class="trip-info__title">${getDestinations(points, destinations)}</h1>
@@ -51,7 +67,7 @@ const createTripInfoTemplate = (points, destinations) => (
     </div>
 
     <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${getTripValue(points)}</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${getTripValue(points, offers)}</span>
     </p>
   </section>`
 );
@@ -69,6 +85,6 @@ export default class TripInfoView extends AbstractView{
   }
 
   get template() {
-    return createTripInfoTemplate(this.#points, this.#destinations);
+    return createTripInfoTemplate(this.#points, this.#offers, this.#destinations);
   }
 }
