@@ -2,6 +2,7 @@ import SortingView from '../view/sorting-view';
 import TripPointsListView from '../view/points-list-view';
 import NoPointView from '../view/no-points-view';
 import LoadingView from '../view/loading-view';
+import InitErrorView from '../view/init-error-view';
 import { FilterType, NoPointMessage, SortType, UpdateType, UserAction, TimeLimit } from '../const';
 import { remove, render, RenderPosition } from '../framework/render';
 import PointPresenter from './point-presenter';
@@ -20,12 +21,14 @@ export default class BoardPresenter {
   #sortComponent = null;
   #noPointComponent = null;
   #loadingComponent = new LoadingView();
+  #initErrorComponent = new InitErrorView();
 
   #pointPresenter = new Map();
   #pointNewPresenter = null;
   #currentSortType = SortType.DEFAULT;
   #isLoading = true;
   #uiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
+  #isInitError = false;
 
   constructor (boardContainer, pointsModel, filterModel) {
     this.#boardContainer = boardContainer;
@@ -133,6 +136,12 @@ export default class BoardPresenter {
         remove(this.#loadingComponent);
         this.#renderBoard();
         break;
+      case UpdateType.INIT_ERROR:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#isInitError = true;
+        this.#renderBoard();
+        break;
       default:
         throw new Error(`Unknown update type: ${updateType}`);
     }
@@ -172,9 +181,18 @@ export default class BoardPresenter {
     render(this.#loadingComponent, this.#boardContainer);
   };
 
+  #renderInitError = () => {
+    render(this.#initErrorComponent, this.#boardContainer);
+  };
+
   #renderBoard = () => {
     if (this.#isLoading) {
       this.#renderLoading();
+      return;
+    }
+
+    if (this.#isInitError) {
+      this.#renderInitError();
       return;
     }
 

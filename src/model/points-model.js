@@ -41,6 +41,8 @@ export default class PointsModel extends Observable {
         this.#offers = [];
         this.#points = [];
         this.#destinations = [];
+
+        this._notify(UpdateType.INIT_ERROR);
       });
   };
 

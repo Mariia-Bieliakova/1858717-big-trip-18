@@ -359,6 +359,11 @@ export default class EditFormView extends AbstractStatefulView{
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
 
+    if (evt.target.value < 1) {
+      evt.target.value = '';
+      return;
+    }
+
     this.updateElement({
       basePrice: Number(evt.target.value)
     });
@@ -371,11 +376,13 @@ export default class EditFormView extends AbstractStatefulView{
       const hasOffer = this._state.offers.includes(clickedOfferId);
 
       const updatedOffers = hasOffer ?
-        this._state.offers.filter((offer) => offer.id !== clickedOfferId)
+        this._state.offers.filter((offer) => offer !== clickedOfferId)
         :
         this._state.offers.concat(clickedOfferId);
 
-      this._setState({offers: updatedOffers});
+      this.updateElement({
+        offers: updatedOffers
+      });
     }
   };
 
@@ -391,7 +398,6 @@ export default class EditFormView extends AbstractStatefulView{
     const priceInput = this.element.querySelector('.event__input--price');
 
     if (priceInput.value < 1) {
-      submitButton.disabled = true;
       return;
     }
 
