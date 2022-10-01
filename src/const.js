@@ -42,7 +42,8 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
-  INIT: 'INIT'
+  INIT: 'INIT',
+  INIT_ERROR: 'INIT ERROR'
 };
 
 const FormType = {
